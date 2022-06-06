@@ -1,27 +1,12 @@
 import { Link, Outlet, useLoaderData } from "@remix-run/react";
+import { db } from "../../services/db.js";
 
-export const loader = () => {
-  //esto es la respuesta de la db
-  const data = {
-    posts: [
-      {
-        id: 1,
-        title: "Post 1",
-        content: "Loren ipsun dolor sit amet, consectuter...",
-      },
-      {
-        id: 2,
-        title: "Post 2",
-        content: "Loren ipsun dolor sit amet, consectuter...",
-      },
-      {
-        id: 3,
-        title: "Post 3",
-        content: "Loren ipsun dolor sit amet, consectuter...",
-      },
-    ],
+export const loader = async () => {
+  const posts = await db.post.findMany();
+
+  return {
+    posts,
   };
-  return data;
 };
 
 export default function Index() {
@@ -38,17 +23,18 @@ export default function Index() {
             <Link to="/posts/create">Crear un post</Link>
           </li>
         </ul>
+        <aside>
+          <Outlet />
+        </aside>
       </nav>
       {posts.map((post) => (
         <div key={post.id}>
-          <h2>{post.title}</h2>
-          <p>{post.content}</p>
+          <Link to={`/posts/${post.id}`}>
+            <h2>{post.title}</h2>
+            <p>{post.body}</p>
+          </Link>
         </div>
       ))}
-
-      <aside>
-        <Outlet />
-      </aside>
     </div>
   );
 }

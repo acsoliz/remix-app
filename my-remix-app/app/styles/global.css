@@ -20,3 +20,6 @@ footer {
 footer small {
   font-size: 10px;
 }
+form[disabled] {
+  opacity: .7;
+}

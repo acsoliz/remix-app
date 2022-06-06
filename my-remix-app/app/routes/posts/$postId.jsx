@@ -1,11 +1,24 @@
-import { useParams } from "@remix-run/react";
+import { useLoaderData } from "@remix-run/react";
+import { db } from "../../services/db.js";
+
+export const loader = async ({ params }) => {
+  const post = await db.post.findUnique({
+    where: {
+      id: params.postId,
+    },
+  });
+
+  return {
+    post,
+  };
+};
 
 export default function SinglePost() {
-    const params = useParams()
+  const { post } = useLoaderData();
   return (
     <>
-    <h2> Post Title of {params.postId}</h2>
-      <p>Lorem ipsun sit amet, consectas afdsfd sa</p>
+      <h2>{post.title}</h2>
+      <p>{post.body}</p>
     </>
   );
 }
